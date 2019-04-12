@@ -12,7 +12,7 @@ CREATE TABLE products(
     primary key (item_id)
 );
 
-INSERT INTO products(product_name, department_name, price, stock_quantity)
+INSERT INTO products(product_name, department_name, priceproducts, stock_quantity)
 VALUES ("Master Sword Replica", "Swords", 35.00, 7);
 
 INSERT INTO products(product_name, department_name, price, stock_quantity)
