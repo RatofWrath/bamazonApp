@@ -62,15 +62,18 @@ function menu(res){
         ])
         .then(function(answers){
           var chosenItem;
+          var product_id = parseInt(answers.purchasedProduct);
+          var volume = parseInt(answers.purchaseQuantity);
+
           for(i = 0; i < res.length; i++){
   
-            if(res[i].item_id == answers.purchasedProduct){
+            if(res[i].item_id === product_id){
               chosenItem = res[i];
             }
 
           }
 
-          if(answers.purchaseQuantity > chosenItem.stock_quantity){
+          if(volume > chosenItem.stock_quantity){
             console.log("");
             console.log("You are trying to order more copies of " + chosenItem.product_name +
              " then we have in stock! ");
@@ -78,12 +81,10 @@ function menu(res){
 
           else{
             console.log("");
-            console.log(answers.purchaseQuantity + " copies of " + chosenItem.product_name +
-             " will come to $" + (chosenItem.price * answers.purchaseQuantity));
-
-            chosenItem.stock_quantity -= answers.purchaseQuantity;
-            console.log("There are " + chosenItem.stock_quantity + " copies of " +
-            chosenItem.product_name + " left");
+            var newVolume = chosenItem.stock_quantity - volume;
+            var query = ("UPDATE products SET stock_quantity = ? WHERE item_id = ?");
+            connection.query(query, [newVolume, product_id]);
+            console.log(volume + " copies of " + chosenItem.product_name + " will come to " + (volume * chosenItem.price));
           }
 
           inquirer

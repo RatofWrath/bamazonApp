@@ -57,36 +57,40 @@ function getLow(){
 }
 
 function updateInventory(){
-    console.log("What product would you like to add more of?");
-    console.log("");
 
     inquirer
    .prompt([
      {
+       type: "input",
        name: "product_id",
-       message: "What is the id of the product you want to change the volume of? "
+       message: "What is the id of the product you want to increase the volume of? "
      },
 
      {
+       type: "input",
        name: "volume",
-       message: "How many copies would you like there to be?"
+       message: "How many copies do you want to add?"
      }
     ])
     .then(function(answers){
+      var product_id = parseInt(answers.product_id);
+      var volume = parseInt(answers.volume);
+
       connection.query("SELECT * FROM products", function(err, res){
       var chosenItem;
           for(i = 0; i < res.length; i++){
-  
-            if(res[i].item_id == answers.product_id){
+            
+            if(res[i].item_id === product_id){
               chosenItem = res[i];
             }
 
           }
 
+      volume += chosenItem.stock_quantity;
       var query = ("UPDATE products SET stock_quantity = ? WHERE item_id = ?");
-      connection.query(query, [answers.volume, answers.product_id]);
+      connection.query(query, [volume, product_id]);
 
-      console.log("There are now " + answers.volume + " copies of " + chosenItem.product_name);
+      console.log("There are now " + volume + " copies of " + chosenItem.product_name);
       menu();
       })
 
@@ -141,7 +145,7 @@ function menu(){
         {
             type: "list",
             name: "option",
-            choices: ["View Products For Sale", "View Low Inventory", "Change Inventory Volume", "Add New Product", "Remove Product", "Exit"]
+            choices: ["View Products For Sale", "View Low Inventory", "Increase Inventory Volume", "Add New Product", "Remove Product", "Exit"]
         }
     ])
     .then(function(answers){
@@ -156,7 +160,7 @@ function menu(){
               getLow();
               break;
 
-            case "Change Inventory Volume":
+            case "Increase Inventory Volume":
               updateInventory();
               break;
 
