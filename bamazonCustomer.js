@@ -81,10 +81,13 @@ function menu(res){
 
           else{
             console.log("");
-            var newVolume = chosenItem.stock_quantity - volume;
+            var newStock = chosenItem.stock_quantity - volume;
             var query = ("UPDATE products SET stock_quantity = ? WHERE item_id = ?");
-            connection.query(query, [newVolume, product_id]);
-            console.log(volume + " copies of " + chosenItem.product_name + " will come to " + (volume * chosenItem.price));
+            connection.query(query, [newStock, product_id]);
+            console.log(volume + " copies of " + chosenItem.product_name + " will come to $" + (volume * chosenItem.price));
+
+            chosenItem.stock_quantity -= volume;
+            console.log("There are " + chosenItem.stock_quantity + " copies of "+ chosenItem.product_name + " left");
           }
 
           inquirer
