@@ -73,21 +73,25 @@ function updateInventory(){
      }
     ])
     .then(function(answers){
-      
+      connection.query("SELECT * FROM products", function(err, res){
+      var chosenItem;
+          for(i = 0; i < res.length; i++){
+  
+            if(res[i].item_id == answers.product_id){
+              chosenItem = res[i];
+            }
+
+          }
+
       var query = ("UPDATE products SET stock_quantity = ? WHERE item_id = ?");
       connection.query(query, [answers.volume, answers.product_id]);
 
-      connection.query("SELECT * FROM products", function(err, res){
-        if(err){
-          console.log("An error has occured");
-          throw err;
-        }
-  
-      printInventory(res);
+      console.log("There are now " + answers.volume + " copies of " + chosenItem.product_name);
       menu();
       })
-  })
-}
+
+    })
+  }
 
 function addNewProduct(){
     console.log("Please enter the details of the product you would like to add.");
